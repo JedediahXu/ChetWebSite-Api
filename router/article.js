@@ -29,4 +29,7 @@ router.get('/queryIdArticle/:id', article_handler.queryIdArticle)
 // 查询分页文章的路由 
 router.get('/queryPagination', article_handler.queryPagination)
 
+//模糊查询文章
+router.get('/queryVague', article_handler.queryVague)
+
 module.exports = router

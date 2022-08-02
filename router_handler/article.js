@@ -58,8 +58,9 @@ exports.queryIdArticle = (req, res) => {
 
 //queryPagination 分页查找文章
 exports.queryPagination = (req, res) => {
-  const page_num = 1 //当前的num req.query.page_num 
-  const page_size = 10  //当前页的数量 req.query.page_size
+  const page_num = req.query.page_num
+  const page_size = req.query.page_size
+  console.log(req);
   const params = [(parseInt(page_num) - 1) * parseInt(page_size), parseInt(page_size)]
   var sql = "select * from ev_articles limit ?,?"
 
@@ -76,7 +77,7 @@ exports.queryPagination = (req, res) => {
         if (error) {
           console.log(error);
         } else {
-          let total = among[0]['id'] //查询表中的数量
+          let total = among[0]['id']
           res.json({
             result: 1,
             status: 200,
@@ -89,6 +90,28 @@ exports.queryPagination = (req, res) => {
             }
           })
         }
+      })
+    }
+  })
+}
+
+
+//模糊查询文章
+exports.queryVague = (req, res) => {
+  const value = req.query.text
+  var sql = `select * from ev_articles where content like '%${value}%'`
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.json({
+        code: 1,
+        message: '查询失败'
+      })
+    } else {
+      res.json({
+        result: 1,
+        status: 200,
+        message: "success",
+        data: result,
       })
     }
   })
