@@ -5,20 +5,13 @@ const db = require('../db/index')
 // 发布文章的处理函数
 exports.addArticle = (req, res) => {
   if (!req.file || req.file.fieldname !== 'cover_img') return res.cc('文章封面是必选参数！')
-
   // TODO：证明数据都是合法的，可以进行后续业务逻辑的处理
-  // 处理文章的信息对象
   const articleInfo = {
-    // 标题、内容、发布状态、所属分类的Id
     ...req.body,
-    // 文章封面的存放路径
     cover_img: path.join('/uploads', req.file.filename),
-    // 文章的发布时间
     pub_date: new Date(),
-    // 文章作者的Id
     author_id: req.user.username,
   }
-  res.cc(articleInfo)
   const sql = `insert into ev_articles set ?`
   db.query(sql, articleInfo, (err, results) => {
     if (err) return res.cc(err)
@@ -26,7 +19,6 @@ exports.addArticle = (req, res) => {
     res.cc('发布文章成功！', 0)
   })
 }
-
 
 // 查找文章的处理函数
 exports.queryArticle = (req, res) => {
@@ -41,7 +33,6 @@ exports.queryArticle = (req, res) => {
   })
 }
 
-
 // 分类id查找文章
 exports.queryIdArticle = (req, res) => {
   const sql = `select * from ev_articles  where cate_id=?`
@@ -55,14 +46,19 @@ exports.queryIdArticle = (req, res) => {
   })
 }
 
-
 //queryPagination 分页查找文章
 exports.queryPagination = (req, res) => {
   const page_num = req.query.page_num
   const page_size = req.query.page_size
-  console.log(req);
-  const params = [(parseInt(page_num) - 1) * parseInt(page_size), parseInt(page_size)]
-  var sql = "select * from ev_articles limit ?,?"
+  const page_id = req.query.page_id
+
+  if (page_id !== '0') {
+    var params = [page_id, (parseInt(page_num) - 1) * parseInt(page_size), parseInt(page_size),]
+    var sql = "select * from ev_articles where cate_id=? limit ?,?"
+  } else {
+    var params = [(parseInt(page_num) - 1) * parseInt(page_size), parseInt(page_size),]
+    var sql = "select * from ev_articles limit ?,?"
+  }
 
   db.query(sql, params, (err, result) => {
     if (err) {
@@ -72,29 +68,50 @@ exports.queryPagination = (req, res) => {
         message: '查询失败'
       })
     } else {
-      let sqlTotal = 'select count(*) as id from ev_articles'
-      db.query(sqlTotal, function (error, among) {
-        if (error) {
-          console.log(error);
-        } else {
-          let total = among[0]['id']
-          res.json({
-            result: 1,
-            status: 200,
-            message: "success",
-            data: result,
-            paging: {
-              page_num: page_num,
-              page_size: page_size,
-              total: total
-            }
-          })
-        }
-      })
+      if (page_id !== '0') {
+        var sqlTotal = 'select count(*) as id from ev_articles where cate_id=?'
+        db.query(sqlTotal, page_id, function (error, among) {
+          if (error) {
+            console.log(error);
+          } else {
+            let total = among[0]['id']
+            res.json({
+              result: 1,
+              status: 200,
+              message: "success",
+              data: result,
+              paging: {
+                page_num: page_num,
+                page_size: page_size,
+                total: total
+              }
+            })
+          }
+        })
+      } else {
+        var sqlTotal = 'select count(*) as id from ev_articles'
+        db.query(sqlTotal, function (error, among) {
+          if (error) {
+            console.log(error);
+          } else {
+            let total = among[0]['id']
+            res.json({
+              result: 1,
+              status: 200,
+              message: "success",
+              data: result,
+              paging: {
+                page_num: page_num,
+                page_size: page_size,
+                total: total
+              }
+            })
+          }
+        })
+      }
     }
   })
 }
-
 
 //模糊查询文章
 exports.queryVague = (req, res) => {
@@ -108,6 +125,52 @@ exports.queryVague = (req, res) => {
       })
     } else {
       res.json({
+        result: 1,
+        status: 200,
+        message: "success",
+        data: result,
+      })
+    }
+  })
+}
+
+//添加照片
+exports.addPhoto = (req, res) => {
+  if (!req.file || req.file.fieldname !== 'photo') return res.cc('必须上传照片！')
+  const articleInfos = {
+    photo: path.join('/uploads', req.file.filename),
+    pub_date: new Date(),
+    author_id: 'ChetSerenade'
+  }
+  const sql = `insert into ev_photo set?`
+  db.query(sql, articleInfos, (err, results) => {
+    console.log(sql, articleInfos);
+    if (err) {
+      res.send({
+        code: 1,
+        message: '添加失败！'
+      })
+    } else {
+      res.send({
+        status: 200,
+        message: "添加成功！",
+        data: results.insertId,
+      })
+    }
+  })
+}
+
+//查询照片
+exports.queryPhoto = (req, res) => {
+  var sql = `select * from ev_Photo`
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.send({
+        code: 1,
+        message: '查询失败'
+      })
+    } else {
+      res.send({
         result: 1,
         status: 200,
         message: "success",
