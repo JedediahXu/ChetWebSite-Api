@@ -18,8 +18,10 @@ router.get('/queryIdArticle/:id', article_handler.queryIdArticle)
 router.get('/queryPagination', article_handler.queryPagination)
 router.get('/queryVague', article_handler.queryVague)
 router.get('/queryPhoto', article_handler.queryPhoto)
+router.get('/queryLink', article_handler.queryLink)
 
 router.post('/addPhoto', uploads.single('photo'), article_handler.addPhoto)
 router.post('/add', uploads.single('cover_img'), expressJoi(add_article_schema), article_handler.addArticle)
+router.post('/addLink', article_handler.addLink)
 
 module.exports = router

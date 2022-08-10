@@ -179,3 +179,46 @@ exports.queryPhoto = (req, res) => {
     }
   })
 }
+
+
+//添加友情链接
+exports.addLink = (req, res) => {
+  const articleInfo = {
+    ...req.body,
+  }
+  const sql = `insert into ev_link set?`
+  db.query(sql, articleInfo, (err, results) => {
+    if (err) {
+      res.send({
+        code: 1,
+        message: '添加失败！'
+      })
+    } else {
+      res.send({
+        status: 200,
+        message: "添加成功！",
+        data: results.insertId,
+      })
+    }
+  })
+}
+
+
+//获取友情链接
+exports.queryLink = (req, res) => {
+  const sql = `select * from ev_link`
+  db.query(sql, (err, results) => {
+    if (err) {
+      res.send({
+        code: 1,
+        message: '获取失败！'
+      })
+    } else {
+      res.send({
+        status: 200,
+        message: "获取成功！",
+        data: results
+      })
+    }
+  })
+}
