@@ -51,13 +51,14 @@ exports.queryPagination = (req, res) => {
   const page_num = req.query.page_num
   const page_size = req.query.page_size
   const page_id = req.query.page_id
+  const value = req.query.text
 
   if (page_id !== '0') {
     var params = [page_id, (parseInt(page_num) - 1) * parseInt(page_size), parseInt(page_size),]
-    var sql = "select * from ev_articles where cate_id=? limit ?,?"
+    var sql = `select * from ev_articles where content like '%${value}%' and cate_id=? limit ?,?`
   } else {
     var params = [(parseInt(page_num) - 1) * parseInt(page_size), parseInt(page_size),]
-    var sql = "select * from ev_articles limit ?,?"
+    var sql = `select * from ev_articles where content like '%${value}%' limit ?,?`
   }
 
   db.query(sql, params, (err, result) => {
@@ -69,7 +70,7 @@ exports.queryPagination = (req, res) => {
       })
     } else {
       if (page_id !== '0') {
-        var sqlTotal = 'select count(*) as id from ev_articles where cate_id=?'
+        var sqlTotal = `select count(*) as id from ev_articles where  content like '%${value}%' and cate_id=? `
         db.query(sqlTotal, page_id, function (error, among) {
           if (error) {
             console.log(error);
@@ -89,7 +90,7 @@ exports.queryPagination = (req, res) => {
           }
         })
       } else {
-        var sqlTotal = 'select count(*) as id from ev_articles'
+        var sqlTotal = `select count(*) as id from ev_articles where content like '%${value}%'`
         db.query(sqlTotal, function (error, among) {
           if (error) {
             console.log(error);
