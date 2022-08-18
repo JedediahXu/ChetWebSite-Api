@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const joi = require('joi')
 const cors = require('cors')
+
 app.use(cors())
 
 // 配置解析表单数据的中间件，注意：这个中间件，只能解析 application/x-www-form-urlencoded 格式的表单数据
@@ -54,16 +55,12 @@ app.use('/my/article', articleRouter)
 const articleApiRouter = require('./router/article')
 app.use('/api/article', articleApiRouter)
 
-
-
-
 // 定义错误级别的中间件
 app.use((err, req, res, next) => {
   if (err instanceof joi.ValidationError) return res.cc(err)
   if (err.name === 'UnauthorizedError') return res.cc('身份认证失败！')
   res.cc(req)
 })
-
 
 app.listen(3007, () => {
   console.log('api server running at http://127.0.0.1:3007')

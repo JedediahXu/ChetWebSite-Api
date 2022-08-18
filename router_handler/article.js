@@ -223,3 +223,35 @@ exports.queryLink = (req, res) => {
     }
   })
 }
+
+
+//添加访客记录
+// exports.queryAmount = (req, res) => {
+//   const sql = 'update ev_statistics set total_amount=total_amount+1'
+//   db.query(sql, (err, results) => {
+//     if (err) {
+//       res.send({
+//         code: 1,
+//         message: '添加失败！'
+//       })
+//     } else {
+//       const sql = `select * from ev_statistics`
+//       res.send(res.cookie);
+//       db.query(sql, (err, results) => {
+//         if (err) {
+//           res.send({
+//             code: 1,
+//             message: '添加失败！'
+//           })
+//         } else {
+//           res.send({
+//             status: 200,
+//             message: "获取成功！",
+//             data: results
+//           })
+//         }
+//       })
+//     }
+//   })
+// }
+
