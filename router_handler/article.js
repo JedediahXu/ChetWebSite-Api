@@ -225,33 +225,13 @@ exports.queryLink = (req, res) => {
 }
 
 
-//添加访客记录
-// exports.queryAmount = (req, res) => {
-//   const sql = 'update ev_statistics set total_amount=total_amount+1'
-//   db.query(sql, (err, results) => {
-//     if (err) {
-//       res.send({
-//         code: 1,
-//         message: '添加失败！'
-//       })
-//     } else {
-//       const sql = `select * from ev_statistics`
-//       res.send(res.cookie);
-//       db.query(sql, (err, results) => {
-//         if (err) {
-//           res.send({
-//             code: 1,
-//             message: '添加失败！'
-//           })
-//         } else {
-//           res.send({
-//             status: 200,
-//             message: "获取成功！",
-//             data: results
-//           })
-//         }
-//       })
-//     }
-//   })
-// }
-
+// 根据 Id 更新文章分类的处理函数
+exports.updateVolume = (req, res) => {
+  const sql = 'update ev_articles  set  visitor_volume=visitor_volume+1 where Id=?'
+  // 执行更新文章分类的 SQL 语句
+  db.query(sql, req.query.Id, (err, results) => {
+    if (err) return res.cc(err)
+    if (results.affectedRows !== 1) return res.cc('增加阅读成功！')
+    res.cc('增加阅读成功！', 0)
+  })
+}

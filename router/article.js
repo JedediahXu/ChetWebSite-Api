@@ -19,7 +19,7 @@ router.get('/queryPagination', article_handler.queryPagination)
 router.get('/queryVague', article_handler.queryVague)
 router.get('/queryPhoto', article_handler.queryPhoto)
 router.get('/queryLink', article_handler.queryLink)
-// router.get('/queryAmount', article_handler.queryAmount)
+router.get('/updateVolume', article_handler.updateVolume)
 
 
 router.post('/addPhoto', uploads.single('photo'), article_handler.addPhoto)
