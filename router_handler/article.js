@@ -10,7 +10,6 @@ exports.addArticle = (req, res) => {
     ...req.body,
     cover_img: path.join('/uploads', req.file.filename),
     pub_date: new Date(),
-    author_id: req.user.username,
   }
   const sql = `insert into ev_articles set ?`
   db.query(sql, articleInfo, (err, results) => {
