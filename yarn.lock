@@ -138,6 +138,11 @@
   "resolved" "https://registry.npm.taobao.org/bytes/download/bytes-3.1.0.tgz"
   "version" "3.1.0"
 
+"circular-json@^0.5.9":
+  "integrity" "sha512-4ivwqHpIFJZBuhN3g/pEcdbnGUywkBblloGbkglyloVjjR3uT6tieI89MVOfbP2tHX5sgb01FuLgAOzebNlJNQ=="
+  "resolved" "https://r2.cnpmjs.org/circular-json/-/circular-json-0.5.9.tgz"
+  "version" "0.5.9"
+
 "concat-stream@^1.5.2":
   "integrity" "sha1-kEvfGUzTEi/Gdcd/xKw9T/D9GjQ="
   "resolved" "https://registry.npm.taobao.org/concat-stream/download/concat-stream-1.6.2.tgz"

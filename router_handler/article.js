@@ -135,7 +135,7 @@ exports.queryVague = (req, res) => {
   })
 }
 
-//添加照片
+//添加照片 
 exports.addPhoto = (req, res) => {
   if (!req.file || req.file.fieldname !== 'photo') return res.cc('必须上传照片！')
   const articleInfos = {
@@ -145,7 +145,6 @@ exports.addPhoto = (req, res) => {
   }
   const sql = `insert into ev_photo set?`
   db.query(sql, articleInfos, (err, results) => {
-    console.log(sql, articleInfos);
     if (err) {
       res.send({
         code: 1,
@@ -155,7 +154,33 @@ exports.addPhoto = (req, res) => {
       res.send({
         status: 200,
         message: "添加成功！",
-        data: results.insertId,
+        data: 'http://127.0.0.1:3007' + articleInfos.photo,
+      })
+    }
+  })
+}
+
+//文章添加照片 
+exports.mdPhoto = (req, res) => {
+  if (!req.file || req.file.fieldname !== 'photo') return res.cc('必须上传照片！')
+  const articleInfos = {
+    photo: path.join('/uploads', req.file.filename),
+    pub_date: new Date(),
+    name: 'ChetSerenade'
+  }
+  const sql = `insert into ev_mdphoto set?`
+  db.query(sql, articleInfos, (err, results) => {
+    if (err) {
+      res.send({
+        code: 1,
+        message: '添加失败！'
+      })
+    } else {
+      res.send({
+        status: 200,
+        message: "添加成功！",
+        name: req.file.originalname,
+        data: 'http://127.0.0.1:3007' + articleInfos.photo,
       })
     }
   })

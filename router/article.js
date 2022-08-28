@@ -21,7 +21,7 @@ router.get('/queryPhoto', article_handler.queryPhoto)
 router.get('/queryLink', article_handler.queryLink)
 router.get('/updateVolume', article_handler.updateVolume)
 
-
+router.post('/mdPhoto', uploads.single('photo'), article_handler.mdPhoto)
 router.post('/addPhoto', uploads.single('photo'), article_handler.addPhoto)
 router.post('/add', uploads.single('cover_img'), expressJoi(add_article_schema), article_handler.addArticle)
 router.post('/addLink', article_handler.addLink)
