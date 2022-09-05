@@ -22,7 +22,7 @@ router.get('/queryLink', article_handler.queryLink)
 router.get('/updateVolume', article_handler.updateVolume)
 
 router.post('/mdPhoto', uploads.single('photo'), article_handler.mdPhoto)
-router.post('/addPhoto', uploads.single('photo'), article_handler.addPhoto)
+router.post('/addPhoto', uploads.fields([{ name: 'photo', maxCount: 1 }, { name: 'thumbnail_photo', maxCount: 1 }]), article_handler.addPhoto)
 router.post('/addArticle', uploads.single('cover_img'), expressJoi(add_article_schema), article_handler.addArticle)
 router.post('/addLink', article_handler.addLink)
 

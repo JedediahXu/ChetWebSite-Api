@@ -10,6 +10,7 @@ exports.addArticle = (req, res) => {
     ...req.body,
     cover_img: path.join('/uploads', req.file.filename),
     pub_date: new Date(),
+    visitor_volume: 0,
   }
   const sql = `insert into ev_articles set ?`
   db.query(sql, articleInfo, (err, results) => {
@@ -136,9 +137,12 @@ exports.queryVague = (req, res) => {
 
 //添加照片 
 exports.addPhoto = (req, res) => {
-  if (!req.file || req.file.fieldname !== 'photo') return res.cc('必须上传照片！')
+  // console.log(req.files.photo, '-------');
+  // console.log(req.files.thumbnail_photo.filename, '-------');
+  // if (!req.files || req.files.photo.fieldname !== 'photo') return res.cc('必须上传照片！')
   const articleInfos = {
-    photo: path.join('/uploads', req.file.filename),
+    photo: path.join('/uploads', req.files.photo[0].filename),
+    thumbnail_photo: path.join('/uploads', req.files.thumbnail_photo[0].filename),
     pub_date: new Date(),
     author_id: 'ChetSerenade'
   }

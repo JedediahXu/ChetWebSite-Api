@@ -1,13 +1,14 @@
 const joi = require('@hapi/joi')
 const name = joi.string().required()
-const alias = joi.string().alphanum().required()
-const id = joi.number().integer().min(1).required()
-
+const alias = joi.string().required()
+const id = joi.string().required()
+const describe = joi.string().required()
 // 向外共享验证规则对象
 exports.add_cate_schema = {
   body: {
     name,
     alias,
+    describe,
   },
 }
 
@@ -31,5 +32,6 @@ exports.update_cate_schema = {
     Id: id,
     name,
     alias,
+    describe,
   },
 }

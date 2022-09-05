@@ -41,15 +41,23 @@ exports.regUser = (req, res) => {
 exports.login = (req, res) => {
   // 接收表单的数据
   const userinfo = req.body
+  console.log(userinfo);
   const sql = `select * from ev_users where username=?`
   db.query(sql, userinfo.username, (err, results) => {
-    console.log(err, results);
+    console.log(err);
     if (err) return res.cc(err)
-    if (results.length !== 1) return res.cc('登录失败！')
+    if (results.length !== 1) return res.cc({
+      code: 500,
+      message: '登录失败！',
+    })
 
     // TODO：判断密码是否正确
     const compareResult = bcrypt.compareSync(userinfo.password, results[0].password)
-    if (!compareResult) return res.cc('登录失败！')
+    console.log(compareResult);
+    if (!compareResult) return res.cc({
+      code: 403,
+      message: '登录失败！',
+    })
 
     // TODO：在服务器端生成 Token 的字符串
     const user = { ...results[0], password: '', user_pic: '' }
@@ -58,9 +66,93 @@ exports.login = (req, res) => {
     // 调用 res.send() 将 Token 响应给客户端
     res.send({
       status: 0,
+      code: 200,
       message: '登录成功！',
-      token: 'Bearer ' + tokenStr,
-      id: results[0].id,
+      data: {
+        "access_token": 'Bearer ' + tokenStr,
+      },
     })
+  })
+}
+
+
+exports.list = (req, res) => {
+  res.send({
+    code: 200,
+    data: [{
+      "icon": "HomeOutlined",
+      "title": "管理后台",
+      "path": "/home/index"
+    },
+    {
+      "icon": "AreaChartOutlined",
+      "title": "超级看板",
+      "path": "/dataScreen/index"
+    },
+    {
+      "icon": "PieChartOutlined",
+      "title": "照片上传",
+      "path": "/dataPhoto/index",
+    },
+    {
+      "icon": "FileTextOutlined",
+      "title": "轨迹地图",
+      "path": "/dataMaobox/index",
+    },
+    {
+      "icon": "FundOutlined",
+      "title": "文章撰写",
+      "path": "/article",
+      "children": [{
+        "icon": "AppstoreOutlined",
+        "path": "/article/classification",
+        "title": "分类管理"
+      },
+      {
+        "icon": "AppstoreOutlined",
+        "path": "/article/newarticle",
+        "title": "新撰文章"
+      }
+      ]
+    },
+    {
+      "icon": "PaperClipOutlined",
+      "title": "外部链接",
+      "path": "/link",
+      "children": [{
+        "icon": "AppstoreOutlined",
+        "path": "/link/github",
+        "title": "GitHub 仓库",
+        "isLink": "https://github.com/ChetSerenade"
+      },
+      {
+        "icon": "AppstoreOutlined",
+        "path": "/link/juejin",
+        "title": "掘金文档",
+        "isLink": "https://juejin.cn/user/3685218709411085"
+      },
+      {
+        "icon": "AppstoreOutlined",
+        "path": "/link/myBlog",
+        "title": "个人博客",
+        "isLink": "https://www.gaoyuzi.cn/"
+      }
+      ]
+    }
+    ],
+    message: '成功！',
+  })
+}
+
+exports.buttons = (req, res) => {
+  res.send({
+    code: 200,
+    data: {
+      "useHooks": {
+        "add": true,
+        "delete": true
+      }
+    },
+    message: '成功！',
   })
 }

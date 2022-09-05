@@ -8,4 +8,7 @@ const { reg_login_schema } = require('../schema/user')
 router.post('/reguser', expressJoi(reg_login_schema), user_handler.regUser)
 router.post('/login', expressJoi(reg_login_schema), user_handler.login)
 
+router.get('/list', user_handler.list)
+router.get('/buttons', user_handler.buttons)
+
 module.exports = router
