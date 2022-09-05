@@ -41,10 +41,8 @@ exports.regUser = (req, res) => {
 exports.login = (req, res) => {
   // 接收表单的数据
   const userinfo = req.body
-  console.log(userinfo);
   const sql = `select * from ev_users where username=?`
   db.query(sql, userinfo.username, (err, results) => {
-    console.log(err);
     if (err) return res.cc(err)
     if (results.length !== 1) return res.cc({
       code: 500,
@@ -53,7 +51,6 @@ exports.login = (req, res) => {
 
     // TODO：判断密码是否正确
     const compareResult = bcrypt.compareSync(userinfo.password, results[0].password)
-    console.log(compareResult);
     if (!compareResult) return res.cc({
       code: 403,
       message: '登录失败！',

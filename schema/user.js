@@ -3,10 +3,12 @@ const joi = require('@hapi/joi')
 
 // 定义用户名和密码的验证规则
 const username = joi.string().alphanum().min(1).max(100).required()
-const password = joi
-  .string()
-  .pattern(/^[\S]{6,12}$/)
-  .required()
+const password = joi.string().required()
+// const password = joi.string().pattern(/^[\S]{6,12}$/).required().messages({
+//   "string.min": "Must have at least 8 characters",
+//   "object.regex": "Must have at least 8 characters",
+//   "string.pattern.base": "enter your custom error here..."
+// })
 
 // 定义 id, nickname, email 的验证规则
 const id = joi.number().integer().min(1).required()

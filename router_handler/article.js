@@ -63,7 +63,6 @@ exports.queryPagination = (req, res) => {
 
   db.query(sql, params, (err, result) => {
     if (err) {
-      console.log('err', err.message)
       res.json({
         code: 1,
         message: '查询失败'
