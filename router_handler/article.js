@@ -9,7 +9,7 @@ exports.addArticle = (req, res) => {
   const articleInfo = {
     ...req.body,
     cover_img: path.join('/uploads', req.file.filename),
-    pub_date: new Date(),
+    pub_date: new Date().toLocaleDateString(),
     visitor_volume: 0,
   }
   const sql = `insert into ev_articles set ?`
@@ -35,7 +35,7 @@ exports.queryArticle = (req, res) => {
 
 // 分类id查找文章
 exports.queryIdArticle = (req, res) => {
-  const sql = `select * from ev_articles  where cate_id=?`
+  const sql = `select * from ev_articles  where cate_id=? order by Id`
   db.query(sql, req.params.id, (err, results) => {
     if (err) return res.cc(err)
     res.send({
@@ -55,10 +55,10 @@ exports.queryPagination = (req, res) => {
 
   if (page_id !== '0') {
     var params = [page_id, (parseInt(page_num) - 1) * parseInt(page_size), parseInt(page_size),]
-    var sql = `select * from ev_articles where content like '%${value}%' and cate_id=? limit ?,?`
+    var sql = `select * from ev_articles where content like '%${value}%'  and cate_id=?  order by Id desc limit ?,? `
   } else {
     var params = [(parseInt(page_num) - 1) * parseInt(page_size), parseInt(page_size),]
-    var sql = `select * from ev_articles where content like '%${value}%' limit ?,?`
+    var sql = `select * from ev_articles where content like '%${value}%' order by Id desc limit ?,?`
   }
 
   db.query(sql, params, (err, result) => {
@@ -69,7 +69,7 @@ exports.queryPagination = (req, res) => {
       })
     } else {
       if (page_id !== '0') {
-        var sqlTotal = `select count(*) as id from ev_articles where  content like '%${value}%' and cate_id=? `
+        var sqlTotal = `select count(*) as id from ev_articles where  content like '%${value}%' and cate_id=? order by Id`
         db.query(sqlTotal, page_id, function (error, among) {
           if (error) {
             console.log(error);
@@ -89,7 +89,7 @@ exports.queryPagination = (req, res) => {
           }
         })
       } else {
-        var sqlTotal = `select count(*) as id from ev_articles where content like '%${value}%'`
+        var sqlTotal = `select count(*) as id from ev_articles where content like '%${value}%' order by Id`
         db.query(sqlTotal, function (error, among) {
           if (error) {
             console.log(error);
@@ -116,7 +116,7 @@ exports.queryPagination = (req, res) => {
 //模糊查询文章
 exports.queryVague = (req, res) => {
   const value = req.query.text
-  var sql = `select * from ev_articles where content like '%${value}%'`
+  var sql = `select * from ev_articles where content like '%${value}%' order by Id`
   db.query(sql, (err, result) => {
     if (err) {
       res.json({
