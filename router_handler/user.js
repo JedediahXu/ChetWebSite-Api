@@ -83,7 +83,7 @@ exports.list = (req, res) => {
     },
     {
       "icon": "AreaChartOutlined",
-      "title": "超级看板",
+      "title": "友情链接",
       "path": "/dataScreen/index"
     },
     {
