@@ -8,7 +8,7 @@ exports.addArticle = (req, res) => {
   // TODO：证明数据都是合法的，可以进行后续业务逻辑的处理
   const articleInfo = {
     ...req.body,
-    cover_img: path.join('/uploads', req.file.filename),
+    cover_img: path.join('/uploads', req.file.filename).replaceAll("\\", "//"),
     pub_date: new Date().toLocaleDateString(),
     visitor_volume: 0,
   }
@@ -136,12 +136,9 @@ exports.queryVague = (req, res) => {
 
 //添加照片 
 exports.addPhoto = (req, res) => {
-  // console.log(req.files.photo, '-------');
-  // console.log(req.files.thumbnail_photo.filename, '-------');
-  // if (!req.files || req.files.photo.fieldname !== 'photo') return res.cc('必须上传照片！')
   const articleInfos = {
-    photo: path.join('/uploads', req.files.photo[0].filename),
-    thumbnail_photo: path.join('/uploads', req.files.thumbnail_photo[0].filename),
+    photo: path.join('/uploads', req.files.photo[0].filename).replaceAll("\\", "//"),
+    thumbnail_photo: path.join('/uploads', req.files.thumbnail_photo[0].filename).replaceAll("\\", "//"),
     pub_date: new Date(),
     author_id: 'ChetSerenade'
   }
@@ -166,7 +163,7 @@ exports.addPhoto = (req, res) => {
 exports.mdPhoto = (req, res) => {
   if (!req.file || req.file.fieldname !== 'photo') return res.cc('必须上传照片！')
   const articleInfos = {
-    photo: path.join('/uploads', req.file.filename),
+    photo: path.join('/uploads', req.file.filename).replaceAll("\\", "//"),
     pub_date: new Date(),
     name: 'ChetSerenade'
   }

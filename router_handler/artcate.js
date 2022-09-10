@@ -29,7 +29,7 @@ exports.addArticleCates = (req, res) => {
 
     const articleInfo = {
       ...req.body,
-      cate_photos: path.join('/uploads', req.file.filename),
+      cate_photos: path.join('/uploads', req.file.filename).replaceAll("\\", "//"),
     }
 
     db.query(sql, articleInfo, (err, results) => {
