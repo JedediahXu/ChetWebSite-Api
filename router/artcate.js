@@ -19,4 +19,6 @@ router.get('/cates', artCate_handler.getArtCates)
 router.post('/updatecate', uploads.single('cate_photos'), expressJoi(update_cate_schema), artCate_handler.updateCateById)
 router.post('/addcates', uploads.single('cate_photos'), expressJoi(add_cate_schema), artCate_handler.addArticleCates)
 
+router.post('/nuggetsArticles', artCate_handler.nuggetsArticles)
+
 module.exports = router
