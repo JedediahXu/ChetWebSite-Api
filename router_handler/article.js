@@ -2,7 +2,7 @@
 const path = require('path')
 const db = require('../db/index')
 
-// 发布文章的处理函数
+// 发布文章的··处理函数
 exports.addArticle = (req, res) => {
   if (!req.file || req.file.fieldname !== 'cover_img') return res.cc('文章封面是必选参数！')
   // TODO：证明数据都是合法的，可以进行后续业务逻辑的处理
@@ -33,9 +33,22 @@ exports.queryArticle = (req, res) => {
   })
 }
 
+//根据id 查询文章详情
+exports.queryIdListArticle = (req, res) => {
+  const sql = `select * from ev_articles  where Id=?`
+  db.query(sql, req.params.id, (err, results) => {
+    if (err) return res.cc(err)
+    res.send({
+      status: 0,
+      message: '分类获取文章数据成功！',
+      data: results,
+    })
+  })
+}
+
 // 分类id查找文章
 exports.queryIdArticle = (req, res) => {
-  const sql = `select * from ev_articles  where cate_id=? order by Id`
+  const sql = `select * from ev_articles  where cate_id=? order by Id desc`
   db.query(sql, req.params.id, (err, results) => {
     if (err) return res.cc(err)
     res.send({
@@ -69,7 +82,7 @@ exports.queryPagination = (req, res) => {
       })
     } else {
       if (page_id !== '0') {
-        var sqlTotal = `select count(*) as id from ev_articles where  content like '%${value}%' and cate_id=? order by Id`
+        var sqlTotal = `select count(*) as id from ev_articles where  content like '%${value}%' and cate_id=? order by Id desc`
         db.query(sqlTotal, page_id, function (error, among) {
           if (error) {
             console.log(error);
@@ -89,7 +102,7 @@ exports.queryPagination = (req, res) => {
           }
         })
       } else {
-        var sqlTotal = `select count(*) as id from ev_articles where content like '%${value}%' order by Id`
+        var sqlTotal = `select count(*) as id from ev_articles where content like '%${value}%' order by Id desc`
         db.query(sqlTotal, function (error, among) {
           if (error) {
             console.log(error);
@@ -116,7 +129,7 @@ exports.queryPagination = (req, res) => {
 //模糊查询文章
 exports.queryVague = (req, res) => {
   const value = req.query.text
-  var sql = `select * from ev_articles where content like '%${value}%' order by Id`
+  var sql = `select * from ev_articles where content like '%${value}%' order by Id desc`
   db.query(sql, (err, result) => {
     if (err) {
       res.json({
@@ -153,7 +166,7 @@ exports.addPhoto = (req, res) => {
       res.send({
         status: 200,
         message: "添加成功！",
-        data: 'http://127.0.0.1:3007' + articleInfos.photo,
+        data: 'https://chetserenade.info//apis' + articleInfos.photo,
       })
     }
   })
@@ -187,7 +200,7 @@ exports.mdPhoto = (req, res) => {
 
 //查询照片
 exports.queryPhoto = (req, res) => {
-  var sql = `select * from ev_Photo`
+  var sql = `select * from ev_Photo order by id desc limit 0,23`
   db.query(sql, (err, result) => {
     if (err) {
       res.send({

@@ -20,6 +20,7 @@ router.get('/queryVague', article_handler.queryVague)
 router.get('/queryPhoto', article_handler.queryPhoto)
 router.get('/queryLink', article_handler.queryLink)
 router.get('/updateVolume', article_handler.updateVolume)
+router.get('/queryIdListArticle/:id', article_handler.queryIdListArticle)
 
 router.post('/mdPhoto', uploads.single('photo'), article_handler.mdPhoto)
 router.post('/addPhoto', uploads.fields([{ name: 'photo', maxCount: 1 }, { name: 'thumbnail_photo', maxCount: 1 }]), article_handler.addPhoto)
