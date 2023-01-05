@@ -14,7 +14,7 @@ const db = mysql.createPool({
 })
 
 app.get('/api/article/queryAmount', function (req, res) {
-  res.cookie("name", "zhangsan", { maxAge: 9000000 });
+  res.cookie("name", "chet", { maxAge: 600000 });
   const sql = 'update ev_statistics set total_amount=total_amount+1'
   db.query(sql, (err, results) => {
     if (err) {

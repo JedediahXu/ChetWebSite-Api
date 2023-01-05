@@ -1,6 +1,9 @@
 // 文章的处理函数模块
 const path = require('path')
 const db = require('../db/index')
+const sendmail = require("./sendmail.js");
+
+
 
 // 发布文章的··处理函数
 exports.addArticle = (req, res) => {
@@ -16,9 +19,45 @@ exports.addArticle = (req, res) => {
   db.query(sql, articleInfo, (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows !== 1) return res.cc('发布新文章失败！')
-    res.cc('发布文章成功！', 0)
+    const sql = `select * from ev_sendmail`
+    db.query(sql, (err, resultsemail) => {
+      console.log(resultsemail.length);
+      let mail = []
+      for (let i = 0; i < resultsemail.length; i++) {
+        mail.push(resultsemail[i].mail)
+      }
+      sendmail(mail, `<H1>新文章推送- </H1> <a href=https://chetserenade.info/read?id=${results.insertId}&title=${articleInfo.title}>${articleInfo.title} </a>`);
+    })
+    res.send({
+      status: 200,
+      message: "发布文章成功！",
+      data: `https://chetserenade.info/read' + ?id=${results.insertId}&title=${articleInfo.title}`,
+    })
   })
 }
+
+//添加邮箱
+exports.addeMail = (req, res) => {
+  const setsql = `select * from ev_sendmail where mail=?`
+  db.query(setsql, req.query.mail, (err, results) => {
+    if (err) {
+      return res.cc(err)
+    }
+    // 判断邮箱是否被占用
+    if (results.length > 0) {
+      return res.cc('此邮箱已订阅！')
+    }
+    const sql = `insert into ev_sendmail set mail=?`
+    db.query(sql, req.query.mail, (err, results) => {
+      res.send({
+        status: 200,
+        message: "订阅成功！",
+        data: results,
+      })
+    })
+  })
+}
+
 
 // 查找文章的处理函数
 exports.queryArticle = (req, res) => {
